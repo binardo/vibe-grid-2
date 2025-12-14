@@ -69,7 +69,7 @@ async function resolveDocumentContent(
 async function renderPrompt(
   segments: PromptSegment[],
   company: Company,
-  columns: ColumnConfig[],
+  _columns: ColumnConfig[],
   cells: Record<string, { output: string }>
 ): Promise<string> {
   const parts: string[] = [];

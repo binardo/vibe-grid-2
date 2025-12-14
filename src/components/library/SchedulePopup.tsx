@@ -18,7 +18,7 @@ interface SchedulePopupProps {
 export function SchedulePopup({ open, onOpenChange, schedule, onSave, gridName }: SchedulePopupProps) {
   const [enabled, setEnabled] = useState(schedule?.enabled ?? false);
   const [scheduleType, setScheduleType] = useState<'time' | 'source_data'>(schedule?.type ?? 'time');
-  const [frequency, setFrequency] = useState(schedule?.timeConfig?.frequency ?? 'daily');
+  const [frequency, setFrequency] = useState<'daily' | 'weekly' | 'monthly'>(schedule?.timeConfig?.frequency ?? 'daily');
   const [time, setTime] = useState(schedule?.timeConfig?.time ?? '07:00');
   const [dayOfWeek, setDayOfWeek] = useState(schedule?.timeConfig?.dayOfWeek ?? 1);
   const [dayOfMonth, setDayOfMonth] = useState(schedule?.timeConfig?.dayOfMonth ?? 1);
@@ -82,7 +82,7 @@ export function SchedulePopup({ open, onOpenChange, schedule, onSave, gridName }
                 <div className="space-y-4 p-4 bg-slate-50/50 rounded-lg">
                   <div className="space-y-3">
                     <Label className="text-slate-700">Frequency</Label>
-                    <Select value={frequency} onValueChange={setFrequency}>
+                    <Select value={frequency} onValueChange={(v) => setFrequency(v as 'daily' | 'weekly' | 'monthly')}>
                       <SelectTrigger className="bg-white/50">
                         <SelectValue />
                       </SelectTrigger>
