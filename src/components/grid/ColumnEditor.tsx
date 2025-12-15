@@ -109,6 +109,24 @@ export function ColumnEditor({ open, onOpenChange, column, onSave, priorColumns 
     setTools(tools.filter(t => t.type !== type));
   };
 
+  const getTokenPlaceholder = (type: DynamicTokenType, columnName?: string): string => {
+    const labels: Record<DynamicTokenType, string> = {
+      company_name: 'Company Name',
+      sedol: 'SEDOL',
+      current_date: 'Current Date',
+      current_time: 'Current Time',
+      forward_looking_hypothesis: 'Forward Looking Hypothesis',
+      company_fundamentals: 'Company Fundamentals',
+      latest_earnings_call: 'Latest Earnings Call',
+      latest_earnings_call_date: 'Latest Earnings Call Date',
+      latest_filing_date: 'Latest Filing Date',
+      latest_filing_summary: 'Latest Filing Summary',
+      latest_broker_reports: 'Latest Broker Reports',
+      cell_output: columnName ? `Cell: ${columnName}` : 'Cell Output',
+    };
+    return `{{${labels[type]}}}`;
+  };
+
   const handleAddToken = (type: DynamicTokenType, columnId?: string, columnName?: string) => {
     const token: DynamicToken = {
       id: generateId(),
@@ -116,11 +134,52 @@ export function ColumnEditor({ open, onOpenChange, column, onSave, priorColumns 
       columnId,
       columnName,
     };
-    setSegments([...segments, { type: 'token', token }]);
+    
+    // Insert placeholder at cursor position in textarea
+    const textarea = textareaRef.current;
+    if (textarea) {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const currentText = getTextContent();
+      const placeholder = getTokenPlaceholder(type, columnName);
+      const newText = currentText.substring(0, start) + placeholder + currentText.substring(end);
+      
+      // Update segments with new text and token
+      const newSegments: PromptSegment[] = [
+        { type: 'text', content: newText },
+        ...segments.filter(s => s.type === 'token'),
+        { type: 'token', token },
+      ];
+      setSegments(newSegments);
+      
+      // Restore cursor position after the inserted placeholder
+      setTimeout(() => {
+        textarea.focus();
+        const newPos = start + placeholder.length;
+        textarea.setSelectionRange(newPos, newPos);
+      }, 0);
+    } else {
+      // Fallback: append token at end
+      setSegments([...segments, { type: 'token', token }]);
+    }
   };
 
   const handleRemoveToken = (tokenId: string) => {
-    setSegments(segments.filter(s => s.type !== 'token' || s.token?.id !== tokenId));
+    // Find the token being removed to get its placeholder
+    const tokenSegment = segments.find(s => s.type === 'token' && s.token?.id === tokenId);
+    if (tokenSegment?.token) {
+      const placeholder = getTokenPlaceholder(tokenSegment.token.type, tokenSegment.token.columnName);
+      const currentText = getTextContent();
+      // Remove the placeholder from the text
+      const newText = currentText.replace(placeholder, '');
+      const newSegments: PromptSegment[] = [
+        { type: 'text', content: newText },
+        ...segments.filter(s => s.type === 'token' && s.token?.id !== tokenId),
+      ];
+      setSegments(newSegments);
+    } else {
+      setSegments(segments.filter(s => s.type !== 'token' || s.token?.id !== tokenId));
+    }
   };
 
   const handleTextChange = (text: string) => {

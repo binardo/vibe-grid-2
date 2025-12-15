@@ -80,28 +80,18 @@ export function GridLibrary() {
       <div className="max-w-4xl mx-auto">
         <GlassCard className="p-8">
           <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <img 
-                src="/logo.png" 
-                alt="Generative Grid" 
-                className="w-12 h-12 rounded-lg"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center">
-                  <div className="grid grid-cols-2 gap-0.5">
-                    <div className="w-2 h-2 bg-slate-400 rounded-sm" />
-                    <div className="w-2 h-2 bg-slate-600 rounded-sm" />
-                    <div className="w-2 h-2 bg-slate-500 rounded-sm" />
-                    <div className="w-2 h-2 bg-slate-700 rounded-sm" />
-                  </div>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center">
+                <div className="grid grid-cols-2 gap-0.5">
+                  <div className="w-2 h-2 bg-slate-400 rounded-sm" />
+                  <div className="w-2 h-2 bg-slate-600 rounded-sm" />
+                  <div className="w-2 h-2 bg-slate-500 rounded-sm" />
+                  <div className="w-2 h-2 bg-slate-700 rounded-sm" />
                 </div>
-                <h1 className="text-2xl font-semibold text-slate-800 tracking-tight">
-                  Generative Grid Library
-                </h1>
               </div>
+              <h1 className="text-2xl font-semibold text-slate-800 tracking-tight">
+                Generative Grid Library
+              </h1>
             </div>
             <Button
               onClick={handleCreateGrid}

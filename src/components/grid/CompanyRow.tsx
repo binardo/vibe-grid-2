@@ -44,9 +44,9 @@ export function CompanyRow({ company, onDelete, onRecalculate }: CompanyRowProps
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center gap-2 px-4 py-3 bg-white/30 border-b border-white/20 min-w-[200px] sticky left-0 z-10 backdrop-blur-md"
+      className="flex items-center gap-2 px-4 py-3 bg-white/30 border-b border-white/20 w-[200px] min-w-[200px] max-w-[200px] flex-none sticky left-0 z-10 backdrop-blur-md"
     >
-      <span className="font-medium text-slate-800 flex-1 truncate">
+      <span className="font-medium text-slate-800 flex-1 min-w-0 truncate">
         {company.company_name}
       </span>
       

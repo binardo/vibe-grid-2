@@ -57,8 +57,21 @@ export function GridScreen() {
   const [isColumnEditorOpen, setIsColumnEditorOpen] = useState(false);
   const [viewingCell, setViewingCell] = useState<CellData | null>(null);
   const [viewingCellInfo, setViewingCellInfo] = useState<{ companyName: string; columnName: string } | null>(null);
+  const [pendingNewColumnId, setPendingNewColumnId] = useState<string | null>(null);
   
   const grid = grids.find(g => g.id === gridId);
+  
+  // Open editor when new column is created
+  useEffect(() => {
+    if (pendingNewColumnId && grid) {
+      const newColumn = grid.columns.find(c => c.id === pendingNewColumnId);
+      if (newColumn) {
+        setEditingColumn(newColumn);
+        setIsColumnEditorOpen(true);
+        setPendingNewColumnId(null);
+      }
+    }
+  }, [pendingNewColumnId, grid]);
   
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -104,11 +117,8 @@ export function GridScreen() {
   const handleAddColumn = () => {
     if (!gridId) return;
     const columnId = addColumn(gridId);
-    const newColumn = grids.find(g => g.id === gridId)?.columns.find(c => c.id === columnId);
-    if (newColumn) {
-      setEditingColumn(newColumn);
-      setIsColumnEditorOpen(true);
-    }
+    // Set pending column ID - the useEffect will open the editor once the column exists in the store
+    setPendingNewColumnId(columnId);
   };
   
   const handleEditColumn = (column: ColumnConfig) => {
@@ -244,7 +254,7 @@ export function GridScreen() {
           <div className="flex-1 overflow-auto custom-scrollbar">
             <div className="inline-flex flex-col min-w-full">
               <div className="flex sticky top-0 z-20">
-                <div className="min-w-[200px] px-4 py-3 bg-white/70 backdrop-blur-lg border-b border-r border-white/30 sticky left-0 z-30">
+                <div className="w-[200px] min-w-[200px] max-w-[200px] flex-none px-4 py-3 bg-white/70 backdrop-blur-lg border-b border-r border-white/30 sticky left-0 z-30">
                   <span className="font-medium text-slate-800 text-sm uppercase tracking-wide">
                     Company
                   </span>
@@ -305,7 +315,7 @@ export function GridScreen() {
                           const cell = grid.cells[cellId];
                           
                           return (
-                            <div key={column.id} className="min-w-[250px]">
+                            <div key={column.id} className="w-[250px] min-w-[250px] max-w-[250px] flex-none">
                               {cell && (
                                 <GridCell
                                   cell={cell}
@@ -326,7 +336,7 @@ export function GridScreen() {
 
               {grid.columns.length > 0 && grid.companies.length > 0 && (
                 <div className="flex border-t border-white/30">
-                  <div className="min-w-[200px] sticky left-0 bg-white/30 backdrop-blur-md" />
+                  <div className="w-[200px] min-w-[200px] max-w-[200px] flex-none sticky left-0 bg-white/30 backdrop-blur-md" />
                   
                   {grid.columns.map(column => {
                     const aggregation = Object.values(grid.aggregations).find(a => a.columnId === column.id);
@@ -335,7 +345,7 @@ export function GridScreen() {
                       : undefined;
                     
                     return (
-                      <div key={column.id} className="min-w-[250px]">
+                      <div key={column.id} className="w-[250px] min-w-[250px] max-w-[250px] flex-none">
                         <AggregationRow
                           aggregation={aggregation}
                           aggregationCell={aggregationCell}

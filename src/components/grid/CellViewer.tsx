@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Copy, Check } from 'lucide-react';
+import { Copy, Check } from 'lucide-react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -53,7 +53,7 @@ export function CellViewer({ open, onOpenChange, cell, companyName, columnName }
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl h-[90vh] flex flex-col bg-white/95 backdrop-blur-xl border border-white/40 p-0">
-        <div className="p-6 border-b border-slate-200 flex items-center justify-between">
+        <div className="p-6 border-b border-slate-200">
           <div>
             <h2 className="text-xl font-semibold text-slate-800">
               {companyName} - {columnName}
@@ -63,13 +63,6 @@ export function CellViewer({ open, onOpenChange, cell, companyName, columnName }
               {isStreaming && <RingSpinner size="sm" className="inline-block ml-2" />}
             </p>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => onOpenChange(false)}
-          >
-            <X className="w-5 h-5" />
-          </Button>
         </div>
 
         <Tabs defaultValue="output" className="flex-1 flex flex-col overflow-hidden">

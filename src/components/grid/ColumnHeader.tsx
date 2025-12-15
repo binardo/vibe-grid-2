@@ -47,7 +47,7 @@ export function ColumnHeader({
     <div
       ref={setNodeRef}
       style={style}
-      className="min-w-[250px] px-4 py-3 bg-white/50 backdrop-blur-lg border-b border-r border-white/30 sticky top-0 z-20"
+      className="w-[250px] min-w-[250px] max-w-[250px] flex-none px-4 py-3 bg-white/50 backdrop-blur-lg border-b border-r border-white/30 sticky top-0 z-20"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 flex-1 min-w-0">
