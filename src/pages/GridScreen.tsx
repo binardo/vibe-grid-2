@@ -122,6 +122,9 @@ export function GridScreen() {
     
     const updatedColumn = { ...editingColumn, ...config };
     if (updatedColumn.autoRun && updatedColumn.prompt.length > 0) {
+      // Reset all cells for this column to idle so they can be re-queued
+      // This ensures that edited prompts (including new tokens) will re-run
+      recalculateColumnCells(gridId, editingColumn.id, false);
       setTimeout(() => queueCellsForColumn(editingColumn.id), 100);
     }
   };
